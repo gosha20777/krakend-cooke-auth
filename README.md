@@ -1,0 +1,1 @@
+# krakend-cooke-auth
