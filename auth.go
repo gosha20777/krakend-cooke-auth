@@ -8,7 +8,7 @@ import (
 
 // Validator defines the interface for all the possible validation processes
 type Validator interface {
-	IsValid(subject string) bool
+	IsValid(subject string) (*authInfo, error)
 }
 
 // NewCredentialsValidator creates a validator for a given credentials pair
@@ -22,23 +22,23 @@ type authHeader struct {
 }
 
 type authInfo struct {
-	session_id string
-	user_id int
+	SessionId string `json:"session_id"`
+	UserId int `json:"user_id"`
 }
 
 // IsValid implements the Validator interface
-func (a authHeader) IsValid(value string) bool {
+func (a authHeader) IsValid(value string) (*authInfo, error) {
 	url := a.url + "?cookie=" + value
 	fmt.Println("Make a request to:", url)
 
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("can't make get request to ", url)
-		return false
+		return nil, err
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		fmt.Println("HTTP Status is not in the 2xx range ", resp.StatusCode)
-		return false
+		return nil, err
 	}
 	
 	defer resp.Body.Close()
@@ -46,9 +46,9 @@ func (a authHeader) IsValid(value string) bool {
 	err = json.NewDecoder(resp.Body).Decode(info)
     if err != nil {
 		fmt.Println("can't read body from", url)
-		return false
+		return nil, err
 	}
-	fmt.Println("session_id:", info.session_id)
-	fmt.Println("user_id:", info.user_id)
-	return true
+	fmt.Println("session_id:", info.SessionId)
+	fmt.Println("user_id:", info.UserId)
+	return info, nil
 }

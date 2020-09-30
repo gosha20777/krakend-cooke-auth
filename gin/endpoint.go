@@ -37,10 +37,16 @@ func HandlerFactory(hf krakendgin.HandlerFactory, logger logging.Logger) krakend
 			}
 
 			logger.Info("COOKE: get cookie", cookie.Value)
-			if !validator.IsValid(cookie.Value) {
+			info, err := validator.IsValid(cookie.Value)
+			if err != nil {
 				c.String(http.StatusForbidden, "wrong auth header")
 				return
 			}
+
+			logger.Info("COOKE: session_id", info.SessionId)
+			logger.Info("COOKE: user_id", info.UserId)
+			c.Header("X-SessionId", info.SessionId)
+			
 			next(c)
 		}
 	}
