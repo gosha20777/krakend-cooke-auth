@@ -42,8 +42,8 @@ func HandlerFactory(hf krakendgin.HandlerFactory, logger logging.Logger) krakend
 				return
 			}
 
-			c.Request.Header.Set("X-Session-Id", strconv.Itoa(info.SessionId))
-			c.Request.Header.Set("X-User-Id", info.UserId)
+			c.Request.Header.Set("X-Session-Id", info.SessionId)
+			c.Request.Header.Set("X-User-Id", strconv.Itoa(info.UserId))
 			next(c)
 		}
 	}
