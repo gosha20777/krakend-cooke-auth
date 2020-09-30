@@ -2,6 +2,7 @@ package auth
 
 import (
 	"fmt"
+	"errors"
 	"net/http"
 	"encoding/json"
 )
@@ -37,7 +38,7 @@ func (a authHeader) IsValid(value string) (*authInfo, error) {
 	}
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		fmt.Println("HTTP Status is not in the 2xx range ", resp.StatusCode)
-		return nil, err
+		return nil, errors.New("HTTP Status is not in the 2xx range")
 	}
 	
 	defer resp.Body.Close()
