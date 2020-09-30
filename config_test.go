@@ -7,7 +7,7 @@ import (
 )
 
 func TestConfigGetter(t *testing.T) {
-	v := ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"url": "a"}}))
+	v := ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"url": "a", "cookie": "b"}}))
 	if v == nil {
 		t.Fail()
 	}
@@ -16,6 +16,9 @@ func TestConfigGetter(t *testing.T) {
 		t.Fail()
 	}
 	if credentials.Url != "a" {
+		t.Fail()
+	}
+	if credentials.Cookie != "b" {
 		t.Fail()
 	}
 

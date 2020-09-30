@@ -14,11 +14,13 @@ type Validator interface {
 // NewCredentialsValidator creates a validator for a given credentials pair
 func NewCredentialsValidator(credentials Credentials) Validator {
 	url := credentials.Url
-	return authHeader{url}
+	cookie := credentials.Cookie
+	return authHeader{url, cookie}
 }
 
 type authHeader struct {
-	url string
+	Url string
+	Cookie string
 }
 
 type authInfo struct {
@@ -28,8 +30,7 @@ type authInfo struct {
 
 // IsValid implements the Validator interface
 func (a authHeader) IsValid(value string) (*authInfo, error) {
-	url := a.url + "?cookie=" + value
-	fmt.Println("Make a request to:", url)
+	url := a.Url + "?cookie=" + value
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -48,7 +49,5 @@ func (a authHeader) IsValid(value string) (*authInfo, error) {
 		fmt.Println("can't read body from", url)
 		return nil, err
 	}
-	fmt.Println("session_id:", info.SessionId)
-	fmt.Println("user_id:", info.UserId)
 	return info, nil
 }

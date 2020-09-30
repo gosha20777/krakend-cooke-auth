@@ -1,1 +1,1 @@
-# krakend-cooke-auth
+# krakend-cookie-auth

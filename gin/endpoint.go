@@ -1,15 +1,14 @@
 package gin
 
 import (
+	"strconv"
 	"net/http"
-
 	"github.com/gin-gonic/gin"
-
 	"github.com/devopsfaith/krakend/config"
 	"github.com/devopsfaith/krakend/logging"
 	"github.com/devopsfaith/krakend/proxy"
 	krakendgin "github.com/devopsfaith/krakend/router/gin"
-	auth "github.com/gosha20777/krakend-cooke-auth"
+	auth "github.com/gosha20777/krakend-cookie-auth"
 )
 
 // HandlerFactory decorates a krakendgin.HandlerFactory with the auth layer
@@ -27,26 +26,24 @@ func HandlerFactory(hf krakendgin.HandlerFactory, logger logging.Logger) krakend
 		}
 
 		validator := auth.NewCredentialsValidator(credentials)
+		logger.Info("COOKIE: enabled for the endpoint", cfg.Endpoint)
 
 		return func(c *gin.Context) {
-			cookie, err := c.Request.Cookie("mojo")
+			cookie, err := c.Request.Cookie(validator.Cookie)
 			if err != nil {
-				logger.Warning("COOKE: ", "unable to get cookie")
-				c.String(http.StatusForbidden, "wrong auth header")
+				logger.Warning("COOKIE: unable to get cookie", validator.cookie)
+				c.String(http.StatusForbidden, "no auth header")
 				return
 			}
 
-			logger.Info("COOKE: get cookie", cookie.Value)
 			info, err := validator.IsValid(cookie.Value)
 			if err != nil {
-				c.String(http.StatusForbidden, "wrong auth header")
+				c.String(http.StatusUnauthorized, "wrong auth header")
 				return
 			}
 
-			logger.Info("COOKE: session_id", info.SessionId)
-			logger.Info("COOKE: user_id", info.UserId)
-			c.Request.Header.Set("X-SessionId", info.SessionId)
-
+			c.Request.Header.Set("X-Session-Id", strconv.Itoa(info.SessionId))
+			c.Request.Header.Set("X-User-Id", info.SessionId)
 			next(c)
 		}
 	}
