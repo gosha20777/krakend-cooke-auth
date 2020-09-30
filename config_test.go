@@ -7,7 +7,7 @@ import (
 )
 
 func TestConfigGetter(t *testing.T) {
-	v := ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"user": "a", "pass": "b"}}))
+	v := ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"url": "a"}}))
 	if v == nil {
 		t.Fail()
 	}
@@ -15,23 +15,19 @@ func TestConfigGetter(t *testing.T) {
 	if !ok {
 		t.Fail()
 	}
-	if credentials.User != "a" || credentials.Pass != "b" {
+	if credentials.Url != "a" {
 		t.Fail()
 	}
 
-	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"user": "a"}})); v != nil {
+	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{}})); v != nil {
 		t.Fail()
 	}
 
-	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"user": "a", "pass": true}})); v != nil {
+	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"url": true}})); v != nil {
 		t.Fail()
 	}
 
-	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"pass": "b"}})); v != nil {
-		t.Fail()
-	}
-
-	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"user": 42, "pass": "b"}})); v != nil {
+	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{Namespace: map[string]interface{}{"url": 42}})); v != nil {
 		t.Fail()
 	}
 
@@ -39,7 +35,7 @@ func TestConfigGetter(t *testing.T) {
 		t.Fail()
 	}
 
-	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{"user": "a", "pass": "b"})); v != nil {
+	if v = ConfigGetter(config.ExtraConfig(map[string]interface{}{"url": "a"})); v != nil {
 		t.Fail()
 	}
 }

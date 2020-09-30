@@ -28,7 +28,7 @@ func HandlerFactory(hf krakendgin.HandlerFactory) krakendgin.HandlerFactory {
 		validator := auth.NewCredentialsValidator(credentials)
 
 		return func(c *gin.Context) {
-			if !validator.IsValid(c.GetHeader("Authorization")) {
+			if !validator.IsValid("a") {
 				c.String(http.StatusForbidden, "wrong auth header")
 				return
 			}

@@ -5,12 +5,11 @@ import (
 )
 
 // Namespace is the key to look for extra configuration details
-const Namespace = "github.com/kpacha/krakend-http-auth"
+const Namespace = "github.com/gosha20777/krakend-cooke-auth"
 
 // Credentials contains the pair user:pass
 type Credentials struct {
-	User string
-	Pass string
+	Url string
 }
 
 // ConfigGetter extracts the credentials from the extra config details
@@ -24,25 +23,15 @@ func ConfigGetter(e config.ExtraConfig) interface{} {
 		return nil
 	}
 
-	v, ok := data["user"]
+	v, ok := data["url"]
 	if !ok {
 		return nil
 	}
 
-	user, ok := v.(string)
+	url, ok := v.(string)
 	if !ok {
 		return nil
 	}
 
-	v, ok = data["pass"]
-	if !ok {
-		return nil
-	}
-
-	pass, ok := v.(string)
-	if !ok {
-		return nil
-	}
-
-	return Credentials{user, pass}
+	return Credentials{url}
 }

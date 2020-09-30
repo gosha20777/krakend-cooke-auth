@@ -26,7 +26,7 @@ func HandlerFactory(hf krakendmux.HandlerFactory) krakendmux.HandlerFactory {
 		validator := auth.NewCredentialsValidator(credentials)
 
 		return func(w http.ResponseWriter, r *http.Request) {
-			if !validator.IsValid(r.Header.Get("Authorization")) {
+			if !validator.IsValid("a") {
 				http.Error(w, "wrong auth header", http.StatusForbidden)
 				return
 			}
