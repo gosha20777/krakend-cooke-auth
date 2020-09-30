@@ -36,7 +36,7 @@ func (a authHeader) IsValid(value string) bool {
 		fmt.Println("can't make get request to ", url)
 		return false
 	}
-	if resp.StatusCode <= 200 || resp.StatusCode >= 299 {
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
 		fmt.Println("HTTP Status is not in the 2xx range ", resp.StatusCode)
 		return false
 	}
