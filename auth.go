@@ -14,13 +14,11 @@ type Validator interface {
 // NewCredentialsValidator creates a validator for a given credentials pair
 func NewCredentialsValidator(credentials Credentials) Validator {
 	url := credentials.Url
-	cookie := credentials.Cookie
-	return authHeader{url, cookie}
+	return authHeader{url}
 }
 
 type authHeader struct {
 	Url string
-	Cookie string
 }
 
 type authInfo struct {

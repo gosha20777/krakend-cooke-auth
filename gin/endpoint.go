@@ -26,12 +26,12 @@ func HandlerFactory(hf krakendgin.HandlerFactory, logger logging.Logger) krakend
 		}
 
 		validator := auth.NewCredentialsValidator(credentials)
-		logger.Info("COOKIE: enabled for the endpoint", cfg.Endpoint)
+		logger.Info("COOKIE: enabled for the endpoint", configuration.Endpoint)
 
 		return func(c *gin.Context) {
-			cookie, err := c.Request.Cookie(validator.Cookie)
+			cookie, err := c.Request.Cookie(credentials.Cookie)
 			if err != nil {
-				logger.Warning("COOKIE: unable to get cookie", validator.cookie)
+				logger.Warning("COOKIE: unable to get cookie", credentials.Cookie)
 				c.String(http.StatusForbidden, "no auth header")
 				return
 			}
@@ -43,7 +43,7 @@ func HandlerFactory(hf krakendgin.HandlerFactory, logger logging.Logger) krakend
 			}
 
 			c.Request.Header.Set("X-Session-Id", strconv.Itoa(info.SessionId))
-			c.Request.Header.Set("X-User-Id", info.SessionId)
+			c.Request.Header.Set("X-User-Id", info.UserId)
 			next(c)
 		}
 	}
