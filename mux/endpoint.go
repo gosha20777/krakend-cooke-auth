@@ -4,13 +4,14 @@ import (
 	"net/http"
 
 	"github.com/devopsfaith/krakend/config"
+	"github.com/devopsfaith/krakend/logging"
 	"github.com/devopsfaith/krakend/proxy"
 	krakendmux "github.com/devopsfaith/krakend/router/mux"
 	auth "github.com/gosha20777/krakend-cooke-auth"
 )
 
 // HandlerFactory decorates a krakendmux.HandlerFactory with the auth layer
-func HandlerFactory(hf krakendmux.HandlerFactory) krakendmux.HandlerFactory {
+func HandlerFactory(hf krakendmux.HandlerFactory, logger logging.Logger) krakendmux.HandlerFactory {
 	return func(configuration *config.EndpointConfig, proxy proxy.Proxy) http.HandlerFunc {
 		next := hf(configuration, proxy)
 
