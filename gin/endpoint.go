@@ -45,8 +45,8 @@ func HandlerFactory(hf krakendgin.HandlerFactory, logger logging.Logger) krakend
 
 			logger.Info("COOKE: session_id", info.SessionId)
 			logger.Info("COOKE: user_id", info.UserId)
-			c.Header("X-SessionId", info.SessionId)
-			
+			c.Request.Header("X-SessionId", info.SessionId)
+
 			next(c)
 		}
 	}
