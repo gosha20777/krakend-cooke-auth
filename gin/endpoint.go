@@ -29,8 +29,14 @@ func HandlerFactory(hf krakendgin.HandlerFactory, logger logging.Logger) krakend
 		validator := auth.NewCredentialsValidator(credentials)
 
 		return func(c *gin.Context) {
-			logger.Info("COOKE: ", "a")
-			if !validator.IsValid("a") {
+			cookie, err := c.Request.Cookie("mojo")
+			if err != nil {
+				logger.Warning("COOKE: ", "unable to get cookie")
+				return "", err
+			}
+
+			logger.Info("COOKE: get cookie", cookie.Value)
+			if !validator.IsValid(cookie.Value) {
 				c.String(http.StatusForbidden, "wrong auth header")
 				return
 			}
