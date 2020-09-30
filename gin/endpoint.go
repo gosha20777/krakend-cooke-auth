@@ -32,7 +32,8 @@ func HandlerFactory(hf krakendgin.HandlerFactory, logger logging.Logger) krakend
 			cookie, err := c.Request.Cookie("mojo")
 			if err != nil {
 				logger.Warning("COOKE: ", "unable to get cookie")
-				return "", err
+				c.String(http.StatusForbidden, "wrong auth header")
+				return
 			}
 
 			logger.Info("COOKE: get cookie", cookie.Value)
